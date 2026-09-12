@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ title }} | EstateFlow AI</title>
+</head>
+
+<body>
+
+    <h1>EstateFlow AI</h1>
+
+    <h2>{{ title }}</h2>
+
+    <form method="post">
+
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <button type="submit">
+            Save Lead
+        </button>
+
+    </form>
+
+    <p>
+        <a href="{% url 'lead_list' %}">
+            Back to Leads
+        </a>
+    </p>
+
+</body>
+</html>

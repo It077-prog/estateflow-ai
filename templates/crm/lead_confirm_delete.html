@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Delete Lead | EstateFlow AI</title>
+</head>
+
+<body>
+
+    <h1>EstateFlow AI</h1>
+
+    <h2>Delete Lead</h2>
+
+    <p>
+        Are you sure you want to delete
+        <strong>
+            {{ lead.first_name }}
+            {{ lead.last_name }}
+        </strong>?
+    </p>
+
+    <form method="post">
+
+        {% csrf_token %}
+
+        <button type="submit">
+            Yes, Delete
+        </button>
+
+    </form>
+
+    <p>
+        <a href="{% url 'lead_detail' lead.pk %}">
+            Cancel
+        </a>
+    </p>
+
+</body>
+</html>

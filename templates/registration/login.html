@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login | EstateFlow AI</title>
+</head>
+
+<body>
+
+    <h1>EstateFlow AI</h1>
+
+    <h2>Login</h2>
+
+    {% if form.errors %}
+        <p>
+            Invalid username or password.
+        </p>
+    {% endif %}
+
+    <form method="post">
+
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <button type="submit">
+            Login
+        </button>
+
+    </form>
+
+</body>
+</html>
