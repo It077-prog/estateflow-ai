@@ -41,7 +41,17 @@ ALLOWED_HOSTS = [
     ).split(",")
     if host.strip()
 ]
+render_hostname = os.getenv(
+    "RENDER_EXTERNAL_HOSTNAME"
+)
 
+if (
+    render_hostname
+    and render_hostname not in ALLOWED_HOSTS
+):
+    ALLOWED_HOSTS.append(
+        render_hostname
+    )
 # Application definition
 
 INSTALLED_APPS = [
