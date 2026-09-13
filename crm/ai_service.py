@@ -44,7 +44,7 @@ def generate_text(prompt):
                 if response.text:
                     return response.text.strip()
 
-            except errors.ServerError:
+            except errors.APIError:
                 if attempt < 2:
                     delay = 2 ** attempt
                     time.sleep(delay)

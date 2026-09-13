@@ -1,3 +1,4 @@
+
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count
 from django.shortcuts import get_object_or_404, redirect, render
@@ -10,6 +11,9 @@ from .ai_service import (
     generate_follow_up,
     generate_lead_summary,
 )
+import logging
+
+logger = logging.getLogger(__name__)
 @login_required
 def lead_list(request):
     leads = Lead.objects.all().order_by("-created_at")
@@ -71,7 +75,6 @@ def generate_ai_follow_up(request, pk):
     )
 
     if request.method == "POST":
-
         try:
             follow_up = generate_follow_up(
                 lead
@@ -82,6 +85,24 @@ def generate_ai_follow_up(request, pk):
                 request,
                 "AI is temporarily unavailable. "
                 "Please try again shortly.",
+            )
+
+            return redirect(
+                "lead_detail",
+                pk=lead.pk,
+            )
+
+        except Exception:
+            logger.exception(
+                "Unexpected error generating AI follow-up "
+                "for lead %s",
+                lead.pk,
+            )
+
+            messages.error(
+                request,
+                "Unable to generate the follow-up message "
+                "right now.",
             )
 
             return redirect(
@@ -106,7 +127,7 @@ def generate_ai_follow_up(request, pk):
     return redirect(
         "lead_detail",
         pk=lead.pk,
-    )@login_required
+        )@login_required
 def dashboard(request):
     today = timezone.localdate()
 
