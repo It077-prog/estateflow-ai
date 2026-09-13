@@ -21,7 +21,7 @@ def generate_text(prompt):
 
     primary_model = os.getenv(
         "GEMINI_MODEL",
-        "gemini-3.8-flash",
+        "gemini-3.6-flash",
     )
 
     fallback_model = os.getenv(
