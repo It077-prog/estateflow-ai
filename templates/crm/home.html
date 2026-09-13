@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>EstateFlow AI</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background:
+                linear-gradient(
+                    135deg,
+                    #0f172a,
+                    #1e293b
+                );
+            color: white;
+            min-height: 100vh;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 8%;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .nav-button {
+            text-decoration: none;
+            color: white;
+            border: 1px solid #64748b;
+            padding: 10px 20px;
+            border-radius: 8px;
+        }
+
+        .hero {
+            min-height: 70vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .badge {
+            background: #1e3a8a;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        h1 {
+            font-size: 56px;
+            max-width: 900px;
+            margin-bottom: 24px;
+        }
+
+        .highlight {
+            color: #60a5fa;
+        }
+
+        .subtitle {
+            color: #cbd5e1;
+            font-size: 20px;
+            max-width: 700px;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+
+        .primary-button {
+            display: inline-block;
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-weight: bold;
+            margin: 6px;
+        }
+
+        .secondary-button {
+            display: inline-block;
+            color: white;
+            text-decoration: none;
+            padding: 14px 28px;
+            border: 1px solid #64748b;
+            border-radius: 8px;
+            margin: 6px;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns:
+                repeat(
+                    auto-fit,
+                    minmax(220px, 1fr)
+                );
+            gap: 20px;
+            padding: 20px 8% 70px;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .feature {
+            background: rgba(255, 255, 255, 0.06);
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid #334155;
+        }
+
+        .feature h3 {
+            margin-bottom: 12px;
+        }
+
+        .feature p {
+            color: #cbd5e1;
+            line-height: 1.5;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: #94a3b8;
+        }
+
+        @media (max-width: 700px) {
+            h1 {
+                font-size: 38px;
+            }
+
+            nav {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<nav>
+    <div class="logo">
+        EstateFlow AI
+    </div>
+
+    {% if user.is_authenticated %}
+        <a
+            class="nav-button"
+            href="{% url 'dashboard' %}"
+        >
+            Dashboard
+        </a>
+    {% else %}
+        <a
+            class="nav-button"
+            href="{% url 'login' %}"
+        >
+            Login
+        </a>
+    {% endif %}
+</nav>
+
+
+<section class="hero">
+
+    <div class="badge">
+        AI-Powered Real Estate CRM
+    </div>
+
+    <h1>
+        Manage leads.
+        Automate follow-ups.
+        <span class="highlight">
+            Close smarter.
+        </span>
+    </h1>
+
+    <p class="subtitle">
+        EstateFlow AI is a real estate lead management
+        platform combining CRM workflows, REST APIs,
+        automation and AI-powered follow-up assistance.
+    </p>
+
+    <div>
+        {% if user.is_authenticated %}
+
+            <a
+                href="{% url 'dashboard' %}"
+                class="primary-button"
+            >
+                Open Dashboard
+            </a>
+
+            <a
+                href="{% url 'lead_list' %}"
+                class="secondary-button"
+            >
+                View Leads
+            </a>
+
+        {% else %}
+
+            <a
+                href="{% url 'login' %}"
+                class="primary-button"
+            >
+                Login to CRM
+            </a>
+
+        {% endif %}
+    </div>
+
+</section>
+
+
+<section class="features">
+
+    <div class="feature">
+        <h3>Lead CRM</h3>
+
+        <p>
+            Manage real estate leads, pipeline status,
+            budgets, property interests and follow-ups.
+        </p>
+    </div>
+
+    <div class="feature">
+        <h3>AI Assistant</h3>
+
+        <p>
+            Generate lead summaries and suggested
+            follow-up messages using Google Gemini.
+        </p>
+    </div>
+
+    <div class="feature">
+        <h3>REST API</h3>
+
+        <p>
+            Search, filter and manage CRM data through
+            authenticated Django REST Framework APIs.
+        </p>
+    </div>
+
+    <div class="feature">
+        <h3>Lead Automation</h3>
+
+        <p>
+            Receive leads automatically from external
+            systems through a secured webhook endpoint.
+        </p>
+    </div>
+
+</section>
+
+
+<footer>
+    EstateFlow AI — Django · PostgreSQL · REST API · Gemini
+</footer>
+
+</body>
+</html>

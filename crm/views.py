@@ -16,7 +16,11 @@ from .models import Lead
 
 
 logger = logging.getLogger(__name__)
-
+def home(request):
+    return render(
+        request,
+        "crm/home.html",
+    )
 
 @login_required
 def lead_list(request):
