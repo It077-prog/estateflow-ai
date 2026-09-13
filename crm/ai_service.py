@@ -20,11 +20,12 @@ def generate_text(prompt):
     client = get_client()
 
     primary_model = os.getenv(
-        "GEMINI_MODEL"
+        "GEMINI_MODEL",
+        "gemini-3.8-flash",
     )
 
     fallback_model = os.getenv(
-        "GEMINI_FALLBACK_MODEL"
+        "GEMINI_FALLBACK_MODEL",
     )
 
     models = [primary_model]
@@ -34,7 +35,6 @@ def generate_text(prompt):
 
     for model in models:
         for attempt in range(3):
-
             try:
                 response = client.models.generate_content(
                     model=model,
@@ -44,19 +44,34 @@ def generate_text(prompt):
                 if response.text:
                     return response.text.strip()
 
-            except errors.APIError:
+                raise AIServiceUnavailable(
+                    "Gemini returned an empty response."
+                )
+
+            except errors.ServerError:
                 if attempt < 2:
-                    delay = 2 ** attempt
-                    time.sleep(delay)
+                    time.sleep(2 ** attempt)
                     continue
 
                 break
+
+            except errors.APIError as exc:
+                raise AIServiceUnavailable(
+                    "The AI service is currently unavailable."
+                ) from exc
+
+            except AIServiceUnavailable:
+                raise
+
+            except Exception as exc:
+                raise AIServiceUnavailable(
+                    "The AI service is currently unavailable."
+                ) from exc
 
     raise AIServiceUnavailable(
         "The AI service is temporarily unavailable. "
         "Please try again shortly."
     )
-
 
 def generate_lead_summary(lead):
     notes = lead.notes.all().order_by(

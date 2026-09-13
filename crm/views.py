@@ -69,46 +69,16 @@ def generate_summary(request, pk):
     )
 @login_required
 def generate_ai_follow_up(request, pk):
-    lead = get_object_or_404(
-        Lead,
-        pk=pk,
-    )
+    lead = get_object_or_404(Lead, pk=pk)
 
-    if request.method == "POST":
-        try:
-            follow_up = generate_follow_up(
-                lead
-            )
+    if request.method != "POST":
+        return redirect(
+            "lead_detail",
+            pk=lead.pk,
+        )
 
-        except AIServiceUnavailable:
-            messages.error(
-                request,
-                "AI is temporarily unavailable. "
-                "Please try again shortly.",
-            )
-
-            return redirect(
-                "lead_detail",
-                pk=lead.pk,
-            )
-
-        except Exception:
-            logger.exception(
-                "Unexpected error generating AI follow-up "
-                "for lead %s",
-                lead.pk,
-            )
-
-            messages.error(
-                request,
-                "Unable to generate the follow-up message "
-                "right now.",
-            )
-
-            return redirect(
-                "lead_detail",
-                pk=lead.pk,
-            )
+    try:
+        follow_up = generate_follow_up(lead)
 
         lead.ai_follow_up = follow_up
 
@@ -119,15 +89,45 @@ def generate_ai_follow_up(request, pk):
             ]
         )
 
-        messages.success(
+    except AIServiceUnavailable:
+        messages.error(
             request,
-            "Follow-up message generated successfully.",
+            "AI is temporarily unavailable. "
+            "Please try again shortly.",
         )
+
+        return redirect(
+            "lead_detail",
+            pk=lead.pk,
+        )
+
+    except Exception:
+        logger.exception(
+            "Unexpected AI follow-up error for lead %s",
+            lead.pk,
+        )
+
+        messages.error(
+            request,
+            "Unable to generate the follow-up message "
+            "right now.",
+        )
+
+        return redirect(
+            "lead_detail",
+            pk=lead.pk,
+        )
+
+    messages.success(
+        request,
+        "Follow-up message generated successfully.",
+    )
 
     return redirect(
         "lead_detail",
         pk=lead.pk,
-        )@login_required
+    )
+@login_required
 def dashboard(request):
     today = timezone.localdate()
 
