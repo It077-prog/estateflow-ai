@@ -1,17 +1,16 @@
+import logging
 
-from django.contrib.auth.decorators import login_required
-from django.db.models import Count
-from django.shortcuts import get_object_or_404, redirect, render
-from django.utils import timezone
 from django.contrib import messages
-from .forms import ActivityForm, LeadForm, NoteForm
-from .models import Lead
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, redirect
+
 from .ai_service import (
     AIServiceUnavailable,
     generate_follow_up,
     generate_lead_summary,
 )
-import logging
+from .models import Lead
+
 
 logger = logging.getLogger(__name__)
 @login_required
@@ -89,7 +88,13 @@ def generate_ai_follow_up(request, pk):
             ]
         )
 
-    except AIServiceUnavailable:
+    except AIServiceUnavailable as exc:
+        logger.exception(
+            "AI follow-up unavailable for lead %s: %s",
+            lead.pk,
+            exc,
+        )
+
         messages.error(
             request,
             "AI is temporarily unavailable. "
