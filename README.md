@@ -8,7 +8,7 @@ The application helps real estate teams manage leads, track follow-ups, record a
 
 Deployed on Render:
 
-`https://YOUR-RENDER-URL.onrender.com`
+`https://estateflow-ai-9utj.onrender.com`
 
 > Replace the URL above with the actual deployed EstateFlow URL.
 
