@@ -10,9 +10,6 @@ Deployed on Render:
 
 `https://estateflow-ai-9utj.onrender.com`
 
-> Replace the URL above with the actual deployed EstateFlow URL.
-
----
 
 ## Features
 
