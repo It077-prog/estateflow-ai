@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard | EstateFlow AI</title>
+</head>
+
+<body>
+
+    <h1>EstateFlow AI</h1>
+
+    <p>
+        Logged in as:
+        <strong>{{ request.user.username }}</strong>
+    </p>
+
+    <p>
+        <a href="{% url 'lead_list' %}">
+            View All Leads
+        </a>
+
+        |
+
+        <a href="{% url 'lead_create' %}">
+            Create Lead
+        </a>
+    </p>
+
+    <hr>
+
+    <h2>CRM Dashboard</h2>
+
+    <h3>Overview</h3>
+
+    <table border="1" cellpadding="10">
+
+        <tr>
+            <th>Total Leads</th>
+            <th>Qualified</th>
+            <th>Won</th>
+            <th>Overdue Follow-ups</th>
+            <th>Conversion Rate</th>
+        </tr>
+
+        <tr>
+            <td>{{ total_leads }}</td>
+            <td>{{ qualified_leads }}</td>
+            <td>{{ won_leads }}</td>
+            <td>{{ overdue_followups }}</td>
+            <td>{{ conversion_rate }}%</td>
+        </tr>
+
+    </table>
+
+    <hr>
+
+    <h2>Pipeline by Stage</h2>
+
+<table border="1" cellpadding="12">
+    <tr>
+        <th>Stage</th>
+        <th>Leads</th>
+    </tr>
+
+    {% for row in pipeline %}
+    <tr>
+        <td>{{ row.status }}</td>
+        <td>{{ row.count }}</td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="2">No leads available.</td>
+    </tr>
+    {% endfor %}
+</table>
+
+    <hr>
+
+    <h3>Lead Sources</h3>
+
+    <table border="1" cellpadding="8">
+
+        <tr>
+            <th>Source</th>
+            <th>Leads</th>
+        </tr>
+
+        {% for source in source_breakdown %}
+
+            <tr>
+                <td>{{ source.source }}</td>
+                <td>{{ source.total }}</td>
+            </tr>
+
+        {% empty %}
+
+            <tr>
+                <td colspan="2">
+                    No source data.
+                </td>
+            </tr>
+
+        {% endfor %}
+
+    </table>
+
+    <hr>
+
+    <h3>Upcoming Follow-ups</h3>
+
+    <table border="1" cellpadding="8">
+
+        <tr>
+            <th>Lead</th>
+            <th>Status</th>
+            <th>Follow-up Date</th>
+        </tr>
+
+        {% for lead in upcoming_followups %}
+
+            <tr>
+
+                <td>
+                    <a href="{% url 'lead_detail' lead.pk %}">
+                        {{ lead.first_name }}
+                        {{ lead.last_name }}
+                    </a>
+                </td>
+
+                <td>
+                    {{ lead.get_status_display }}
+                </td>
+
+                <td>
+                    {{ lead.follow_up_date }}
+                </td>
+
+            </tr>
+
+        {% empty %}
+
+            <tr>
+                <td colspan="3">
+                    No upcoming follow-ups.
+                </td>
+            </tr>
+
+        {% endfor %}
+
+    </table>
+
+</body>
+</html>

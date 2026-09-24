@@ -1,38 +1,92 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Delete Lead | EstateFlow AI</title>
-</head>
+{% extends "base.html" %}
 
-<body>
+{% block title %}
+Delete Lead | EstateFlow AI
+{% endblock %}
 
-    <h1>EstateFlow AI</h1>
 
-    <h2>Delete Lead</h2>
+{% block content %}
 
-    <p>
-        Are you sure you want to delete
-        <strong>
-            {{ lead.first_name }}
-            {{ lead.last_name }}
-        </strong>?
+<div class="page-header">
+
+    <div>
+
+        <div class="tech-label">
+            CRM / RECORD MANAGEMENT
+        </div>
+
+        <h1 class="page-title">
+            Delete Lead
+        </h1>
+
+        <p class="page-subtitle">
+
+            Confirm removal of this CRM record.
+
+        </p>
+
+    </div>
+
+</div>
+
+
+
+<div class="card form-card">
+
+    <span class="badge badge-gold">
+
+        CONFIRMATION REQUIRED
+
+    </span>
+
+
+    <h2 style="margin-top: 25px;">
+
+        Delete
+
+        {{ lead.first_name }}
+        {{ lead.last_name }}?
+
+    </h2>
+
+
+    <p class="muted">
+
+        This will permanently remove the lead
+        and its associated notes and activities.
+
+        This action cannot be undone.
+
     </p>
+
+
 
     <form method="post">
 
         {% csrf_token %}
 
-        <button type="submit">
-            Yes, Delete
-        </button>
+
+        <div class="button-row">
+
+            <button
+                type="submit"
+                class="btn btn-danger"
+            >
+                Yes, Delete Lead
+            </button>
+
+
+            <a
+                href="{% url 'lead_detail' lead.pk %}"
+                class="btn btn-secondary"
+            >
+                Cancel
+            </a>
+
+        </div>
 
     </form>
 
-    <p>
-        <a href="{% url 'lead_detail' lead.pk %}">
-            Cancel
-        </a>
-    </p>
+</div>
 
-</body>
-</html>
+{% endblock %}

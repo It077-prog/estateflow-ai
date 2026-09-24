@@ -1,160 +1,400 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Dashboard | EstateFlow AI</title>
-</head>
+{% extends "base.html" %}
 
-<body>
+{% block title %}
+Dashboard | EstateFlow AI
+{% endblock %}
 
-    <h1>EstateFlow AI</h1>
 
-    <p>
-        Logged in as:
-        <strong>{{ request.user.username }}</strong>
-    </p>
+{% block content %}
 
-    <p>
-        <a href="{% url 'lead_list' %}">
-            View All Leads
-        </a>
+<div class="page-header">
 
-        |
+    <div>
 
-        <a href="{% url 'lead_create' %}">
-            Create Lead
-        </a>
-    </p>
+        <div class="tech-label">
+            CRM / OVERVIEW
+        </div>
 
-    <hr>
+        <h1 class="page-title">
+            CRM Dashboard
+        </h1>
 
-    <h2>CRM Dashboard</h2>
+        <p class="page-subtitle">
 
-    <h3>Overview</h3>
+            Your real estate pipeline,
+            performance metrics and
+            upcoming follow-up activity.
 
-    <table border="1" cellpadding="10">
+        </p>
 
-        <tr>
-            <th>Total Leads</th>
-            <th>Qualified</th>
-            <th>Won</th>
-            <th>Overdue Follow-ups</th>
-            <th>Conversion Rate</th>
-        </tr>
+    </div>
 
-        <tr>
-            <td>{{ total_leads }}</td>
-            <td>{{ qualified_leads }}</td>
-            <td>{{ won_leads }}</td>
-            <td>{{ overdue_followups }}</td>
-            <td>{{ conversion_rate }}%</td>
-        </tr>
 
-    </table>
+    <a
+        href="{% url 'lead_create' %}"
+        class="btn btn-primary"
+    >
+        + Create New Lead
+    </a>
 
-    <hr>
+</div>
 
-    <h3>Pipeline by Stage</h3>
 
-    <table border="1" cellpadding="8">
+<!-- STATISTICS -->
 
-        <tr>
-            <th>Stage</th>
-            <th>Leads</th>
-        </tr>
+<div class="stats-grid">
 
-        {% for stage in pipeline %}
+    <div class="stat-card">
 
-            <tr>
-                <td>{{ stage.status }}</td>
-                <td>{{ stage.total }}</td>
-            </tr>
+        <div class="stat-label">
+            Total Leads
+        </div>
 
-        {% empty %}
+        <div class="stat-number">
+            {{ total_leads }}
+        </div>
 
-            <tr>
-                <td colspan="2">
-                    No pipeline data.
-                </td>
-            </tr>
+    </div>
 
-        {% endfor %}
 
-    </table>
+    <div class="stat-card blue">
 
-    <hr>
+        <div class="stat-label">
+            Qualified Leads
+        </div>
 
-    <h3>Lead Sources</h3>
+        <div class="stat-number">
+            {{ qualified_leads }}
+        </div>
 
-    <table border="1" cellpadding="8">
+    </div>
 
-        <tr>
-            <th>Source</th>
-            <th>Leads</th>
-        </tr>
 
-        {% for source in source_breakdown %}
+    <div class="stat-card gold">
 
-            <tr>
-                <td>{{ source.source }}</td>
-                <td>{{ source.total }}</td>
-            </tr>
+        <div class="stat-label">
+            Won Leads
+        </div>
 
-        {% empty %}
+        <div class="stat-number">
+            {{ won_leads }}
+        </div>
 
-            <tr>
-                <td colspan="2">
-                    No source data.
-                </td>
-            </tr>
+    </div>
 
-        {% endfor %}
 
-    </table>
+    <div class="stat-card">
 
-    <hr>
+        <div class="stat-label">
+            Overdue Follow-ups
+        </div>
 
-    <h3>Upcoming Follow-ups</h3>
+        <div class="stat-number">
+            {{ overdue_followups }}
+        </div>
 
-    <table border="1" cellpadding="8">
+    </div>
 
-        <tr>
-            <th>Lead</th>
-            <th>Status</th>
-            <th>Follow-up Date</th>
-        </tr>
 
-        {% for lead in upcoming_followups %}
+    <div class="stat-card blue">
 
-            <tr>
+        <div class="stat-label">
+            Conversion Rate
+        </div>
 
-                <td>
-                    <a href="{% url 'lead_detail' lead.pk %}">
-                        {{ lead.first_name }}
-                        {{ lead.last_name }}
-                    </a>
-                </td>
+        <div class="stat-number">
+            {{ conversion_rate }}%
+        </div>
 
-                <td>
-                    {{ lead.get_status_display }}
-                </td>
+    </div>
 
-                <td>
-                    {{ lead.follow_up_date }}
-                </td>
+</div>
 
-            </tr>
 
-        {% empty %}
+<!-- PIPELINE + SOURCES -->
 
-            <tr>
-                <td colspan="3">
-                    No upcoming follow-ups.
-                </td>
-            </tr>
+<div class="content-grid">
 
-        {% endfor %}
 
-    </table>
+    <section class="card">
 
-</body>
-</html>
+        <div class="card-header">
+
+            <div>
+
+                <div class="tech-label">
+                    SALES PIPELINE
+                </div>
+
+                <h2>
+                    Pipeline by Stage
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Stage
+                        </th>
+
+                        <th>
+                            Leads
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for row in pipeline %}
+
+                        <tr>
+
+                            <td>
+                                {{ row.status }}
+                            </td>
+
+                            <td class="table-number">
+                                {{ row.count }}
+                            </td>
+
+                        </tr>
+
+                    {% empty %}
+
+                        <tr>
+
+                            <td
+                                colspan="2"
+                                class="empty-state"
+                            >
+
+                                No leads available.
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+
+
+    <section class="card">
+
+        <div class="card-header">
+
+            <div>
+
+                <div class="tech-label">
+                    LEAD ACQUISITION
+                </div>
+
+                <h2>
+                    Lead Sources
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Source
+                        </th>
+
+                        <th>
+                            Leads
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for row in source_breakdown %}
+
+                        <tr>
+
+                            <td>
+                                {{ row.source }}
+                            </td>
+
+                            <td class="table-number">
+                                {{ row.count }}
+                            </td>
+
+                        </tr>
+
+                    {% empty %}
+
+                        <tr>
+
+                            <td
+                                colspan="2"
+                                class="empty-state"
+                            >
+
+                                No lead sources available.
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+<!-- FOLLOW UPS -->
+
+<section class="card">
+
+    <div class="card-header">
+
+        <div>
+
+            <div class="tech-label">
+                UPCOMING ACTIONS
+            </div>
+
+            <h2>
+                Upcoming Follow-ups
+            </h2>
+
+            <p class="muted">
+
+                Leads requiring future attention.
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="table-wrapper">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Lead
+                    </th>
+
+                    <th>
+                        Status
+                    </th>
+
+                    <th>
+                        Follow-up Date
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for lead in upcoming_followups %}
+
+                    <tr>
+
+                        <td>
+
+                            <a href="{% url 'lead_detail' lead.pk %}">
+
+                                {{ lead.first_name }}
+                                {{ lead.last_name }}
+
+                            </a>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="badge badge-blue">
+
+                                {{ lead.get_status_display }}
+
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            {{ lead.follow_up_date|date:"d M Y" }}
+
+                        </td>
+
+                    </tr>
+
+                {% empty %}
+
+                    <tr>
+
+                        <td
+                            colspan="3"
+                            class="empty-state"
+                        >
+
+                            No upcoming follow-ups.
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+{% endblock %}

@@ -1,32 +1,131 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Login | EstateFlow AI</title>
-</head>
+{% extends "base.html" %}
 
-<body>
+{% block title %}
+Login | EstateFlow AI
+{% endblock %}
 
-    <h1>EstateFlow AI</h1>
 
-    <h2>Login</h2>
+{% block content %}
 
-    {% if form.errors %}
-        <p>
-            Invalid username or password.
+<div class="auth-wrapper">
+
+    <div class="auth-card">
+
+
+        <div class="tech-label">
+
+            SECURE CRM ACCESS
+
+        </div>
+
+
+        <h1 style="font-size: 2.1rem; margin-bottom: 12px;">
+
+            Welcome back.
+
+        </h1>
+
+
+        <p
+            class="muted"
+            style="margin-bottom: 30px;"
+        >
+
+            Sign in to access your
+            EstateFlow workspace.
+
         </p>
-    {% endif %}
 
-    <form method="post">
 
-        {% csrf_token %}
 
-        {{ form.as_p }}
+        {% if form.errors %}
 
-        <button type="submit">
-            Login
-        </button>
+            <div class="form-errors">
 
-    </form>
+                Invalid username or password.
 
-</body>
-</html>
+                Please try again.
+
+            </div>
+
+        {% endif %}
+
+
+
+        <form method="post">
+
+            {% csrf_token %}
+
+
+            <div class="form-group">
+
+                <label for="{{ form.username.id_for_label }}">
+
+                    Username
+
+                </label>
+
+
+                {{ form.username }}
+
+            </div>
+
+
+
+            <div class="form-group">
+
+                <label for="{{ form.password.id_for_label }}">
+
+                    Password
+
+                </label>
+
+
+                {{ form.password }}
+
+            </div>
+
+
+
+            <input
+                type="hidden"
+                name="next"
+                value="{{ next }}"
+            >
+
+
+
+            <button
+                type="submit"
+                class="btn btn-primary"
+            >
+                Login to EstateFlow
+            </button>
+
+        </form>
+
+
+
+        <p
+            class="muted"
+            style="
+                margin-top: 25px;
+                margin-bottom: 0;
+                text-align: center;
+                font-size: 0.85rem;
+            "
+        >
+
+            Authorized access only.
+
+            <br>
+
+            EstateFlow AI · Real Estate Intelligence
+
+        </p>
+
+    </div>
+
+</div>
+
+{% endblock %}

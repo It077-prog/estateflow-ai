@@ -1,112 +1,243 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>EstateFlow AI</title>
-</head>
-<p>
-    <a href="{% url 'dashboard' %}">
-        Dashboard
+{% extends "base.html" %}
+
+{% block title %}
+Leads | EstateFlow AI
+{% endblock %}
+
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+
+        <div class="tech-label">
+            CRM / LEADS
+        </div>
+
+        <h1 class="page-title">
+            Lead Management
+        </h1>
+
+        <p class="page-subtitle">
+
+            Manage property enquiries,
+            buyer relationships and
+            your active sales pipeline.
+
+        </p>
+
+    </div>
+
+
+    <a
+        href="{% url 'lead_create' %}"
+        class="btn btn-primary"
+    >
+        + Add Lead
     </a>
 
-    |
+</div>
 
-    <a href="{% url 'lead_create' %}">
-        Create New Lead
-    </a>
-</p>
-<body>
 
-    <h1>EstateFlow AI</h1>
-<p>
-    Logged in as:
-    <strong>{{ request.user.username }}</strong>
-</p>
 
-<form method="post" action="{% url 'logout' %}">
-    {% csrf_token %}
+<section class="card">
 
-    <button type="submit">
-        Logout
-    </button>
-</form>
-    <h2>Leads</h2>
+    <div class="card-header">
 
-    <p>
-        <a href="{% url 'lead_create' %}">
-            Create New Lead
-        </a>
-    </p>
+        <div>
 
-    <table border="1" cellpadding="8">
+            <h2>
+                All Leads
+            </h2>
 
-        <tr>
-            <th>Name</th>
-            <th>Status</th>
-            <th>Source</th>
-            <th>Property</th>
-            <th>Budget</th>
-            <th>Follow-up</th>
-            <th>Actions</th>
-        </tr>
+            <p class="muted">
 
-        {% for lead in leads %}
+                Your real estate CRM records.
 
-        <tr>
+            </p>
 
-            <td>
-                <a href="{% url 'lead_detail' lead.pk %}">
-                    {{ lead.first_name }}
-                    {{ lead.last_name }}
-                </a>
-            </td>
+        </div>
 
-            <td>
-                {{ lead.get_status_display }}
-            </td>
+    </div>
 
-            <td>
-                {{ lead.get_source_display }}
-            </td>
 
-            <td>
-                {{ lead.property_interest }}
-            </td>
+    <div class="table-wrapper">
 
-            <td>
-                {{ lead.budget }}
-            </td>
+        <table>
 
-            <td>
-                {{ lead.follow_up_date }}
-            </td>
+            <thead>
 
-            <td>
+                <tr>
 
-                <a href="{% url 'lead_edit' lead.pk %}">
-                    Edit
-                </a>
+                    <th>
+                        Name
+                    </th>
 
-                |
+                    <th>
+                        Status
+                    </th>
 
-                <a href="{% url 'lead_delete' lead.pk %}">
-                    Delete
-                </a>
+                    <th>
+                        Source
+                    </th>
 
-            </td>
+                    <th>
+                        Property Interest
+                    </th>
 
-        </tr>
+                    <th>
+                        Budget
+                    </th>
 
-        {% empty %}
+                    <th>
+                        Follow-up
+                    </th>
 
-        <tr>
-            <td colspan="7">
-                No leads yet.
-            </td>
-        </tr>
+                    <th>
+                        Actions
+                    </th>
 
-        {% endfor %}
+                </tr>
 
-    </table>
+            </thead>
 
-</body>
-</html>
+
+            <tbody>
+
+                {% for lead in leads %}
+
+                    <tr>
+
+                        <td>
+
+                            <a href="{% url 'lead_detail' lead.pk %}">
+
+                                <strong>
+
+                                    {{ lead.first_name }}
+                                    {{ lead.last_name }}
+
+                                </strong>
+
+                            </a>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="badge badge-teal">
+
+                                {{ lead.get_status_display }}
+
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            {{ lead.get_source_display }}
+
+                        </td>
+
+
+                        <td>
+
+                            {{ lead.property_interest|default:"—" }}
+
+                        </td>
+
+
+                        <td>
+
+                            {% if lead.budget %}
+
+                                {{ lead.budget }}
+
+                            {% else %}
+
+                                —
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+
+                            {% if lead.follow_up_date %}
+
+                                {{ lead.follow_up_date|date:"d M Y" }}
+
+                            {% else %}
+
+                                —
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="button-row">
+
+                                <a
+                                    href="{% url 'lead_detail' lead.pk %}"
+                                    class="btn btn-tech btn-small"
+                                >
+                                    View
+                                </a>
+
+                                <a
+                                    href="{% url 'lead_edit' lead.pk %}"
+                                    class="btn btn-secondary btn-small"
+                                >
+                                    Edit
+                                </a>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                {% empty %}
+
+                    <tr>
+
+                        <td
+                            colspan="7"
+                            class="empty-state"
+                        >
+
+                            No leads yet.
+
+                            <br><br>
+
+                            <a
+                                href="{% url 'lead_create' %}"
+                                class="btn btn-primary"
+                            >
+
+                                Create Your First Lead
+
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+{% endblock %}

@@ -1,238 +1,592 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>
-        {{ lead.first_name }} {{ lead.last_name }}
-    </title>
-</head>
+{% extends "base.html" %}
 
-<body>
-{% if messages %}
+{% block title %}
+{{ lead.first_name }} {{ lead.last_name }} | EstateFlow AI
+{% endblock %}
 
-    {% for message in messages %}
 
-        <p>
-            <strong>
-                {{ message }}
-            </strong>
+{% block content %}
+
+
+<!-- HEADER -->
+
+<div class="page-header">
+
+    <div>
+
+        <div class="tech-label">
+            CRM / LEAD PROFILE
+        </div>
+
+        <h1 class="page-title">
+
+            {{ lead.first_name }}
+            {{ lead.last_name }}
+
+        </h1>
+
+        <p class="page-subtitle">
+
+            Property enquiry,
+            relationship history and
+            AI-assisted follow-up management.
+
         </p>
 
-    {% endfor %}
+        <span class="badge badge-teal">
 
-{% endif %}
+            {{ lead.get_status_display }}
 
-    <h1>EstateFlow AI</h1>
+        </span>
 
-    <p>
-        Logged in as:
-        <strong>{{ request.user.username }}</strong>
-    </p>
+    </div>
 
-    <h2>
-        {{ lead.first_name }}
-        {{ lead.last_name }}
-    </h2>
 
-    <p>
-        <strong>Email:</strong>
-        {{ lead.email }}
-    </p>
+    <div class="button-row">
 
-    <p>
-        <strong>Phone:</strong>
-        {{ lead.phone }}
-    </p>
+        <a
+            href="{% url 'lead_list' %}"
+            class="btn btn-secondary"
+        >
+            Back to Leads
+        </a>
 
-    <p>
-        <strong>Status:</strong>
-        {{ lead.get_status_display }}
-    </p>
-
-    <p>
-        <strong>Source:</strong>
-        {{ lead.get_source_display }}
-    </p>
-
-    <p>
-        <strong>Property Interest:</strong>
-        {{ lead.property_interest }}
-    </p>
-
-    <p>
-        <strong>Budget:</strong>
-        {{ lead.budget }}
-    </p>
-
-    <p>
-        <strong>Follow-up:</strong>
-        {{ lead.follow_up_date }}
-    </p>
-
-    <p>
-        <strong>Assigned To:</strong>
-        {{ lead.assigned_to }}
-    </p>
-
-    <p>
-        <a href="{% url 'lead_edit' lead.pk %}">
+        <a
+            href="{% url 'lead_edit' lead.pk %}"
+            class="btn btn-primary"
+        >
             Edit Lead
         </a>
 
-        |
-
-        <a href="{% url 'lead_delete' lead.pk %}">
-            Delete Lead
+        <a
+            href="{% url 'lead_delete' lead.pk %}"
+            class="btn btn-danger"
+        >
+            Delete
         </a>
 
-        |
-
-        <a href="{% url 'lead_list' %}">
-            Back to Leads
-        </a>
-    </p>
-
-    <hr>
-<hr>
-
-<h2>AI Assistant</h2>
-
-<h3>Lead Summary</h3>
-
-{% if lead.ai_summary %}
-    <p>
-        {{ lead.ai_summary }}
-    </p>
-{% else %}
-    <p>No AI summary generated yet.</p>
-{% endif %}
-
-<form method="post"
-      action="{% url 'generate_summary' lead.pk %}">
-
-    {% csrf_token %}
-
-    <button type="submit">
-        Generate AI Summary
-    </button>
-
-</form>
-
-
-<h3>Suggested Follow-up</h3>
-
-{% if lead.ai_follow_up %}
-
-    <div>
-        {{ lead.ai_follow_up|linebreaks }}
     </div>
 
-{% else %}
+</div>
 
-    <p>
-        No AI follow-up generated yet.
-    </p>
 
-{% endif %}
 
-<form method="post"
-      action="{% url 'generate_ai_follow_up' lead.pk %}">
+<!-- LEAD INFORMATION -->
 
-    {% csrf_token %}
+<section class="card">
 
-    <button type="submit">
-        Generate Follow-up Message
-    </button>
+    <div class="card-header">
 
-</form>
-    <h2>Notes</h2>
+        <div>
 
-    <form method="post"
-          action="{% url 'note_create' lead.pk %}">
+            <div class="tech-label">
+                CONTACT RECORD
+            </div>
 
-        {% csrf_token %}
+            <h2>
+                Lead Information
+            </h2>
 
-        {{ note_form.as_p }}
+        </div>
 
-        <button type="submit">
+    </div>
+
+
+    <div class="detail-grid">
+
+
+        <div class="detail-item">
+
+            <div class="detail-label">
+                Full Name
+            </div>
+
+            <div class="detail-value">
+
+                {{ lead.first_name }}
+                {{ lead.last_name }}
+
+            </div>
+
+        </div>
+
+
+
+        <div class="detail-item">
+
+            <div class="detail-label">
+                Email
+            </div>
+
+            <div class="detail-value">
+
+                {{ lead.email|default:"Not provided" }}
+
+            </div>
+
+        </div>
+
+
+
+        <div class="detail-item">
+
+            <div class="detail-label">
+                Phone
+            </div>
+
+            <div class="detail-value">
+
+                {{ lead.phone|default:"Not provided" }}
+
+            </div>
+
+        </div>
+
+
+
+        <div class="detail-item">
+
+            <div class="detail-label">
+                Lead Source
+            </div>
+
+            <div class="detail-value">
+
+                {{ lead.get_source_display }}
+
+            </div>
+
+        </div>
+
+
+
+        <div class="detail-item">
+
+            <div class="detail-label">
+                Property Interest
+            </div>
+
+            <div class="detail-value">
+
+                {{ lead.property_interest|default:"Not specified" }}
+
+            </div>
+
+        </div>
+
+
+
+        <div class="detail-item">
+
+            <div class="detail-label">
+                Budget
+            </div>
+
+            <div class="detail-value">
+
+                {% if lead.budget %}
+
+                    {{ lead.budget }}
+
+                {% else %}
+
+                    Not specified
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+
+        <div class="detail-item">
+
+            <div class="detail-label">
+                Assigned Agent
+            </div>
+
+            <div class="detail-value">
+
+                {% if lead.assigned_to %}
+
+                    {{ lead.assigned_to.username }}
+
+                {% else %}
+
+                    Unassigned
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+
+        <div class="detail-item">
+
+            <div class="detail-label">
+                Follow-up Date
+            </div>
+
+            <div class="detail-value">
+
+                {% if lead.follow_up_date %}
+
+                    {{ lead.follow_up_date|date:"d M Y" }}
+
+                {% else %}
+
+                    Not scheduled
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- AI ASSISTANT -->
+
+<div class="content-grid">
+
+
+    <!-- AI SUMMARY -->
+
+    <section class="card ai-card">
+
+        <div class="card-header">
+
+            <div>
+
+                <div class="tech-label">
+                    GEMINI / INTELLIGENCE
+                </div>
+
+                <h2>
+                    AI Lead Summary
+                </h2>
+
+                <p class="muted">
+
+                    Generate a concise overview
+                    of buyer intent and next steps.
+
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <form
+            method="post"
+            action="{% url 'generate_summary' lead.pk %}"
+        >
+
+            {% csrf_token %}
+
+            <button
+                type="submit"
+                class="btn btn-primary"
+            >
+                Generate AI Summary
+            </button>
+
+        </form>
+
+
+        {% if lead.ai_summary %}
+
+            <div class="ai-output">
+
+                {{ lead.ai_summary|linebreaksbr }}
+
+            </div>
+
+        {% else %}
+
+            <p
+                class="muted"
+                style="margin-top: 22px;"
+            >
+
+                No AI summary generated yet.
+
+            </p>
+
+        {% endif %}
+
+    </section>
+
+
+
+    <!-- AI FOLLOW UP -->
+
+    <section class="card ai-card">
+
+        <div class="card-header">
+
+            <div>
+
+                <div class="tech-label">
+                    GEMINI / COMMUNICATION
+                </div>
+
+                <h2>
+                    Suggested Follow-up
+                </h2>
+
+                <p class="muted">
+
+                    Generate a professional
+                    follow-up message for this lead.
+
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <form
+            method="post"
+            action="{% url 'generate_ai_follow_up' lead.pk %}"
+        >
+
+            {% csrf_token %}
+
+            <button
+                type="submit"
+                class="btn btn-primary"
+            >
+                Generate Follow-up
+            </button>
+
+        </form>
+
+
+        {% if lead.ai_follow_up %}
+
+            <div class="ai-output">
+
+                {{ lead.ai_follow_up|linebreaksbr }}
+
+            </div>
+
+        {% else %}
+
+            <p
+                class="muted"
+                style="margin-top: 22px;"
+            >
+
+                No follow-up message generated yet.
+
+            </p>
+
+        {% endif %}
+
+    </section>
+
+</div>
+
+
+
+<!-- NOTES + ACTIVITIES -->
+
+<div class="content-grid">
+
+
+    <!-- NOTES -->
+
+    <section class="card">
+
+        <div class="card-header">
+
+            <div>
+
+                <div class="tech-label">
+                    RELATIONSHIP HISTORY
+                </div>
+
+                <h2>
+                    Lead Notes
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        {% for note in lead.notes.all %}
+
+            <div class="timeline-item">
+
+                <div class="timeline-date">
+
+                    {{ note.created_at|date:"d M Y, H:i" }}
+
+                    {% if note.author %}
+
+                        · {{ note.author.username }}
+
+                    {% endif %}
+
+                </div>
+
+
+                <div>
+
+                    {{ note.content|linebreaksbr }}
+
+                </div>
+
+            </div>
+
+        {% empty %}
+
+            <p class="muted">
+                No notes recorded yet.
+            </p>
+
+        {% endfor %}
+
+
+        <hr
+            style="
+                border: 0;
+                border-top: 1px solid var(--border);
+                margin: 28px 0;
+            "
+        >
+
+
+        <h3>
             Add Note
-        </button>
+        </h3>
 
-    </form>
 
-    <h3>Note History</h3>
+        <form
+            method="post"
+            action="{% url 'note_create' lead.pk %}"
+        >
 
-    {% for note in notes %}
+            {% csrf_token %}
 
-        <div>
+            {{ note_form.as_p }}
 
-            <p>
-                <strong>
-                    {{ note.author }}
-                </strong>
+            <button
+                type="submit"
+                class="btn btn-primary"
+            >
+                Save Note
+            </button>
 
-                -
+        </form>
 
-                {{ note.created_at }}
-            </p>
+    </section>
 
-            <p>
-                {{ note.content }}
-            </p>
+
+
+    <!-- ACTIVITIES -->
+
+    <section class="card">
+
+        <div class="card-header">
+
+            <div>
+
+                <div class="tech-label">
+                    CRM / AUDIT TRAIL
+                </div>
+
+                <h2>
+                    Activity History
+                </h2>
+
+            </div>
 
         </div>
 
-        <hr>
 
-    {% empty %}
+        {% for activity in lead.activities.all %}
 
-        <p>No notes yet.</p>
+            <div class="timeline-item">
 
-    {% endfor %}
+                <div class="timeline-date">
 
-    <h2>Activities</h2>
+                    {{ activity.created_at|date:"d M Y, H:i" }}
 
-    <form method="post"
-          action="{% url 'activity_create' lead.pk %}">
+                </div>
 
-        {% csrf_token %}
 
-        {{ activity_form.as_p }}
+                <div class="timeline-title">
 
-        <button type="submit">
-            Add Activity
-        </button>
-
-    </form>
-
-    <h3>Activity History</h3>
-
-    {% for activity in activities %}
-
-        <div>
-
-            <p>
-                <strong>
                     {{ activity.get_activity_type_display }}
-                </strong>
 
-                -
+                </div>
 
-                {{ activity.created_at }}
+
+                <div class="muted">
+
+                    {{ activity.description|linebreaksbr }}
+
+                </div>
+
+            </div>
+
+        {% empty %}
+
+            <p class="muted">
+
+                No activities recorded yet.
+
             </p>
 
-            <p>
-                {{ activity.description }}
-            </p>
+        {% endfor %}
 
-        </div>
 
-        <hr>
+        <hr
+            style="
+                border: 0;
+                border-top: 1px solid var(--border);
+                margin: 28px 0;
+            "
+        >
 
-    {% empty %}
 
-        <p>No activities yet.</p>
+        <h3>
+            Log Activity
+        </h3>
 
-    {% endfor %}
 
-</body>
-</html>
+        <form
+            method="post"
+            action="{% url 'activity_create' lead.pk %}"
+        >
+
+            {% csrf_token %}
+
+            {{ activity_form.as_p }}
+
+            <button
+                type="submit"
+                class="btn btn-primary"
+            >
+                Save Activity
+            </button>
+
+        </form>
+
+    </section>
+
+</div>
+
+{% endblock %}
