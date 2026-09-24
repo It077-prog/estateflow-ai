@@ -4,6 +4,30 @@ EstateFlow AI is a full-stack real estate lead management CRM built with Django,
 
 The application helps real estate teams manage leads, track follow-ups, record activities, generate AI-powered lead summaries and follow-up messages, and receive leads automatically from external systems through a secured webhook.
 
+## Technical Case Study
+
+EstateFlow AI is a cloud-deployed real estate CRM demonstrating
+lead management, REST API development, secured webhook intake,
+and on-demand Google Gemini AI integration.
+
+The technical case study covers:
+
+- Business problem and proposed solution
+- Application architecture and request flows
+- Django and PostgreSQL implementation
+- REST APIs and webhook security
+- Gemini AI-assisted lead management
+- Live application screenshots
+- Comparison with publicly documented CRM projects
+- Automated and manual testing
+- Future automation roadmap using n8n, Make and Zapier
+
+**Testing:** 13/13 automated tests passed.
+
+[View EstateFlow AI Technical Case Study](docs/EstateFlow_AI_Technical_Case_Study.pdf)
+
+**Live Application:** https://estateflow-ai-9utj.onrender.com/
+
 ## Live Application
 
 Deployed on Render:
